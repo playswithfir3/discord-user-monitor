@@ -209,8 +209,9 @@ func main() {
 			logger.Println("Logged in successfully !")
 			time.Sleep(time.Duration(*discordLoadTime) * time.Second) // wait for page to load
 			
-			logger.Printf("Sleeping for 30 seconds\n")
-			time.Sleep(30 * time.Second)
+			// useful if you need to type in your 2fa
+			//logger.Printf("Sleeping for 30 seconds\n")
+			//time.Sleep(30 * time.Second)
 
 			// find and click server link
 			if *discordServerName != "" { // find by name
@@ -240,9 +241,8 @@ func main() {
 			}
 
 			//select member button to populate right member bar
-
-			logger.Printf("Sleeping for 30 seconds\n")
-			time.Sleep(30 * time.Second)
+			
+			time.Sleep(2 * time.Second) // wait until clicked server is loaded
 
 			membersLink, err := driver.FindElement(selenium.ByCSSSelector, fmt.Sprintf(`div.iconWrapper-2awDjA:nth-child(4)`))
 			if err != nil {
@@ -329,7 +329,16 @@ func main() {
 				// scroll right bar for 700px each iteration
 				if i > 0 {
 					// get right bar scroll element
-					rightBar, err := driver.FindElement(selenium.ByCSSSelector, `html.full-motion.theme-dark.platform-web.font-size-16 body div#app-mount.appMount-2yBXZl div.appAsidePanelWrapper-ev4hlp div.notAppAsidePanel-3yzkgB div.app-3xd6d0 div.app-2CXKsg div.layers-OrUESM.layers-1YQhyW div.layer-86YKbF.baseLayer-W6S8cY div.container-1eFtFS div.base-2jDfDU div.content-1SgpWY div.chat-2ZfjoI div.content-1jQy2l div.container-2o3qEW aside.membersWrap-3NUR2t.hiddenMembers-8kpYM0 div.members-3WRCEx.thin-RnSY0a.scrollerBase-1Pkza4.fade-27X6bG.customTheme-3QAYZq`)
+					rightBar, err := driver.FindElement(selenium.ByCSSSelector, `div.appMount-2yBXZl div.app-3xd6d0 div.container-1eFtFS div.base-2jDfDU div.content-1SgpWY div.chat-2ZfjoI div.content-1jQy2l div.container-2o3qEW aside.membersWrap-3NUR2t div.scrollerBase-1Pkza4`)
+
+
+					//new
+					//div.appMount-2yBXZl div.app-3xd6d0 div.container-1eFtFS div.base-2jDfDU div.content-1SgpWY div.chat-2ZfjoI div.content-1jQy2l div.container-2o3qEW aside.membersWrap-3NUR2t div.scrollerBase-1Pkza4
+
+					//old
+					//html.full-motion.theme-dark.platform-web.font-size-16 body div#app-mount.appMount-2yBXZl div.appAsidePanelWrapper-ev4hlp div.notAppAsidePanel-3yzkgB div.app-3xd6d0 div.app-2CXKsg div.layers-OrUESM.layers-1YQhyW div.layer-86YKbF.baseLayer-W6S8cY div.container-1eFtFS div.base-2jDfDU div.content-1SgpWY div.chat-2ZfjoI div.content-1jQy2l div.container-2o3qEW aside.membersWrap-3NUR2t.hiddenMembers-8kpYM0 div.members-3WRCEx.thin-RnSY0a.scrollerBase-1Pkza4.fade-27X6bG.customTheme-3QAYZq
+
+
 					if err != nil {
 						logger.Printf("Finding right scroll bar: %v\n", err)
 						runtime.Goexit()
@@ -366,8 +375,12 @@ func main() {
 			driver.Close()
 
 			// run scrapper every specified interval minute
+			// skipping the loop
+			/*
 			logger.Printf("Sleeping %d minutes before next scrapping\n", *scrappingInterval)
 			time.Sleep(time.Duration(*scrappingInterval) * time.Minute)
+			*/
+			os.Exit(1)
 		}
 	}()
 
